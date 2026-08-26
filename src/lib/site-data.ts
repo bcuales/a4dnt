@@ -10,8 +10,8 @@ export const company = {
   name: "Audio4Design n Technology Corp.",
   shortName: "Audio4Design",
   foundedLabel: "Since 2003",
-  phone: "0933-4634994 / 8812-2538",
-  email: "biancacuales@a4dnt.com",
+  phone: "+63 917-737-0209 / 8812-2538",
+  email: "bencuales@audio4design.com",
   website: "www.audio4design.com",
   address: [
     "2nd Flr., Unit 209 Cityland Pasong Tamo",
