@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+:root {
+  /* Fixed brand tones. These NEVER change with the light/dark toggle — they're used only by
+     the permanently-dark "statement" sections (Hero, Mission/Vision, Final CTA, Footer) and by
+     dark overlays drawn on top of photographs. See CLAUDE.md ("Theming") before changing these. */
+  --color-ink: #0b0b0c;
+  --color-paper: #faf9f7;
+
+  /* Theme-reactive tokens. Everything else (regular content sections, nav, buttons, text) uses
+     these. Values below are the LIGHT theme (the default). Dark-theme overrides are further down. */
+  --color-canvas: #faf9f7;
+  --color-canvas-alt: #f1f0ee;
+  --color-body: #0b0b0c;
+  --color-muted: #6b6864;
+  --color-border: #e4e2de;
+  --color-accent: #d6222a;
+  --color-accent-ink: #ffffff;
+
+  --container-max: 1280px;
+  --space-section: clamp(4.5rem, 9vw, 8.5rem);
+  --space-inline: clamp(1.25rem, 5vw, 5rem);
+
+  color-scheme: light;
+}
+
+/* Dark theme. Applied by setting data-theme="dark" on <html> — done by the inline script in
+   layout.tsx (before first paint, to avoid a flash) and toggled at runtime by ThemeToggle.tsx.
+   The visitor's choice is remembered in localStorage; first-time visitors get their OS preference. */
+:root[data-theme="dark"] {
+  --color-canvas: #0b0b0c;
+  --color-canvas-alt: #17181a;
+  --color-body: #f2f0ed;
+  --color-muted: #9c9893;
+  --color-border: #2a2b2e;
+  --color-accent: #ff5a57;
+  --color-accent-ink: #ffffff;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-paper: var(--color-paper);
+  --color-canvas: var(--color-canvas);
+  --color-canvas-alt: var(--color-canvas-alt);
+  --color-body: var(--color-body);
+  --color-muted: var(--color-muted);
+  --color-border: var(--color-border);
+  --color-accent: var(--color-accent);
+  --color-accent-ink: var(--color-accent-ink);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/*
+ * Anchor targets (#about, #solutions, …) must clear the fixed navbar when jumped to —
+ * without this the section's top scrolls under the header and its heading is hidden.
+ * Slightly more than the navbar's ~73px height.
+ */
+section[id],
+article[id] {
+  scroll-margin-top: 5rem;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-body);
+  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-inline);
+}
+
+.section {
+  padding-block: var(--space-section);
+}
+
+/*
+ * First section of a sub-page (one without a hero), which sits beneath the fixed navbar and
+ * needs extra top clearance. Must be defined AFTER `.section` — both are plain classes with
+ * equal specificity, so source order decides. For the same reason a Tailwind `pt-*` utility
+ * can NOT override `.section`: the utilities are imported above, so `.section` always wins.
+ */
+.section-page-top {
+  padding-top: calc(var(--space-section) + 3.5rem);
+}
+
+/* ThemeToggle.tsx: show the icon for the mode you'd switch TO, keyed off the data-theme
+   attribute on <html> — CSS-only so it never causes a hydration mismatch (see component). */
+.theme-icon-sun {
+  display: none;
+}
+.theme-icon-moon {
+  display: block;
+}
+:root[data-theme="dark"] .theme-icon-sun {
+  display: block;
+}
+:root[data-theme="dark"] .theme-icon-moon {
+  display: none;
+}
+
+.eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
